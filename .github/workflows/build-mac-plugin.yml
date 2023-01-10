@@ -21,6 +21,7 @@ jobs:
           cd godot-cpp
           scons platform=osx macos_arch=${{ matrix.architecture }} generate_bindings=yes target=release
           cd ..
+          mkdir bin
       - name: Compile GodotSteam
         run: |
           scons platform=osx macos_arch=x64_64 production=yes target=release
