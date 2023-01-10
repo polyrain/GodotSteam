@@ -13,7 +13,7 @@ opts.Add(EnumVariable('p', "Compilation target, alias for 'platform'", '', ['', 
 opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
 opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'bin/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'godotsteam', PathVariable.PathAccept))
-opts.Add(PathVariable('macos_arch', 'The architecture to compile for', 'arm64', ['x86_64', 'arm64']))
+opts.Add(EnumVariable('macos_arch', "Compilation architecture", 'arm64', ['x86_64', 'arm64']))
 
 # Local dependency paths, adapt them to your setup
 godot_headers_path = "godot-cpp/godot-headers/"
