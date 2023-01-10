@@ -29,10 +29,29 @@ jobs:
         run: |
           ls -al
           ls -al bin/osx
-    #  - name: Upload macOS dylib
-     #   uses: actions/upload-artifact@v3
-      #  with:
-       #   name: macos-template-app
-        #  path: godot/misc/dist/osx_template.zip
-         # if-no-files-found: error
-          #retention-days: 1
+    - name: Upload macOS dylib
+      uses: actions/upload-artifact@v3
+        with:
+          name: macos-plugin-${{ matrix.architecture }}
+          path: bin/osx/libgodotsteam-${{ matrix.architecture }}.dylib
+          if-no-files-found: error
+          retention-days: 1
+  
+  bundle_universal:
+    needs: build_macos
+    runs-on: macos-latest
+    steps:
+      - name: Download x86_64
+        uses: actions/download-artifact@v3
+        with:
+          name: libgodotsteam-x86_64.dylib
+          path: dylibs
+      - name: Download arm64
+        uses: actions/download-artifact@v3
+        with:
+          name: libgodotsteam-arm64.dylib
+          path: dylibs
+      - name: Bundle together
+        run: |
+        cd dylibs
+        lipo libgodotsteam-x86_64.dylib libgodotsteam-arm64.dylib -output libgodotsteam.dylib -create
