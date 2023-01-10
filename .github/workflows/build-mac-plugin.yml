@@ -1,4 +1,27 @@
-on: push
+on: 
+  push:
+  workflow_call:
+    inputs:
+      steamworks_sdk_tag:
+        required: true
+        type: string
+      godot_tag:
+        required: true
+        type: string
+      version_tag:
+        required: true
+        type: string
+      binary_name:
+        required: true
+        type: string
+      artifact_name:
+        required: true
+        type: string
+    secrets:
+      steamworks_sdk_repo:
+        required: true
+      steamworks_sdk_repo_token:
+        required: true
 
 jobs:
   build-macos:
@@ -8,5 +31,10 @@ jobs:
            # Checkout current source of GodotSteam
       - name: Checkout GodotSteam
         uses: actions/checkout@v3
-      - name: Print dir
-        run: ls -al
+      - name: Checkout godot-cpp
+        run: git clone --recursive -b 3.5 https://github.com/godotengine/godot-cpp
+      - name: Compile godot-cpp
+        run: |
+          cd godot-cpp
+          scons platform=osx macos_arch=x86_64 generate_bindings=yes target=release
+          cd ..
