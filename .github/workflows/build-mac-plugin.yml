@@ -24,7 +24,7 @@ jobs:
           mkdir bin
       - name: Compile GodotSteam
         run: |
-          scons platform=osx macos_arch=x64_64 production=yes target=release
+          scons platform=osx macos_arch=${{ matrix.architecture }} production=yes target=release
       - name: Print compiled
         run: |
           ls -al
