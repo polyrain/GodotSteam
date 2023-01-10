@@ -29,8 +29,8 @@ jobs:
         run: |
           ls -al
           ls -al bin/osx
-    - name: Upload macOS dylib
-      uses: actions/upload-artifact@v3
+      - name: Upload macOS dylib
+        uses: actions/upload-artifact@v3
         with:
           name: macos-plugin-${{ matrix.architecture }}
           path: bin/osx/libgodotsteam-${{ matrix.architecture }}.dylib
