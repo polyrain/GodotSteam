@@ -1,30 +1,10 @@
-on: 
-  push:
-  workflow_call:
-    inputs:
-      steamworks_sdk_tag:
-        required: true
-        type: string
-      godot_tag:
-        required: true
-        type: string
-      version_tag:
-        required: true
-        type: string
-      binary_name:
-        required: true
-        type: string
-      artifact_name:
-        required: true
-        type: string
-    secrets:
-      steamworks_sdk_repo:
-        required: true
-      steamworks_sdk_repo_token:
-        required: true
+on: push
 
 jobs:
-  build-macos:
+   build_macos:
+    strategy:
+      matrix:
+        architecture: ['x86_64', 'arm64']
     runs-on: macos-latest
     steps:
       # Need to download godot-cpp, compile it, and the steamworks sdk
@@ -39,5 +19,19 @@ jobs:
       - name: Compile godot-cpp
         run: |
           cd godot-cpp
-          scons platform=osx macos_arch=x86_64 generate_bindings=yes target=release
+          scons platform=osx macos_arch=${{ matrix.architecture }} generate_bindings=yes target=release
           cd ..
+      - name: Compile GodotSteam
+        run: |
+          scons platform=osx macos_arch=x64_64 production=yes target=release
+      - name: Print compiled
+        run: |
+          ls -al
+          ls -al bin/osx
+    #  - name: Upload macOS dylib
+     #   uses: actions/upload-artifact@v3
+      #  with:
+       #   name: macos-template-app
+        #  path: godot/misc/dist/osx_template.zip
+         # if-no-files-found: error
+          #retention-days: 1
