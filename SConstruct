@@ -51,12 +51,18 @@ if env['platform'] == '':
 if env['platform'] == "osx":
     env['target_path'] += 'osx/'
     cpp_library += '.osx'
+    if env["macos_arch"] == "x86_64":
+        env.Append(CCFLAGS = ['-g','-O2', '-arch', 'x86_64', '-std=c++17'])
+        env.Append(LINKFLAGS = ['-arch', 'x86_64'])
+    else: # Default to ARM since M1/M2 is the future for mac
+        env.Append(CCFLAGS = ['-g','-O2', '-arch', 'arm64', '-std=c++17'])
+        env.Append(LINKFLAGS = ['-arch', 'arm64'])
+        
     if env['target'] in ('debug', 'd'):
-        env.Append(CCFLAGS = ['-g','-O2', '-arch', 'x86_64', '-arch', 'arm64', '-std=c++17'])
-        env.Append(LINKFLAGS = ['-arch', 'x86_64', '-arch', 'arm64'])
+        env.Append(CCFLAGS = ['-g','-O2', '-std=c++17'])
     else:
-        env.Append(CCFLAGS=['-g', '-O3', '-arch', 'x86_64', '-std=c++17'])
-        env.Append(LINKFLAGS=['-arch', 'x86_64', '-arch', 'arm64'])
+        env.Append(CCFLAGS=['-g', '-O3', '-std=c++17'])
+    
     # Set the correct Steam library
     steam_lib_path += "/osx"
     steamworks_library = 'libsteam_api.dylib'
