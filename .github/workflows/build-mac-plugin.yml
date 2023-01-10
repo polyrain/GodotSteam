@@ -1,0 +1,12 @@
+on: push
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      # Need to download godot-cpp, compile it, and the steamworks sdk
+           # Checkout current source of GodotSteam
+      - name: Checkout GodotSteam
+        uses: actions/checkout@v3
+      - name: Print dir
+        run: ls -al
